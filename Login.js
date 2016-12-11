@@ -1,7 +1,7 @@
 'use strict'
 
 import React from 'react'
-import { View, Text, StyleSheet, Image, TextInput } from 'react-native'
+import { View, Text, StyleSheet, Image, TextInput, TouchableHighlight } from 'react-native'
 
 class Login extends React.Component {
 
@@ -12,6 +12,9 @@ class Login extends React.Component {
         <Text style={styles.heading}> GitHub Browser</Text>
         <TextInput style={styles.input} placeholder="GitHub Username"></TextInput>
         <TextInput style={styles.input} placeholder="GitHub Password" secureTextEntry="true"></TextInput>
+        <TouchableHighlight style={styles.button}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableHighlight>
       </View>
     )
   }
@@ -41,6 +44,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderWidth: 1,
     borderColor: '#48bbec'
+  },
+  button: {
+    height: 50,
+    backgroundColor: '#48bbec',
+    alignSelf: 'stretch',
+    marginTop: 10,
+    justifyContent: 'center'
+  },
+  buttonText: {
+    fontSize: 22,
+    color: '#fff',
+    alignSelf: 'center'
   }
 })
 
