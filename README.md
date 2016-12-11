@@ -5,3 +5,6 @@ At the time I completed this course it was almost a year old and there have been
 
  - React Native now depends on React so imports/requires are a bit different than in the course.
  - I've opted to use the ES6 `import` syntax instead of `require`.
+ - I'm using a number of ES6 features that the author doesn't use.
+   - Using arrow functions to declare class methods and avoid the need to use `.bind()`.
+   - Using template literals instead of string concatination.
