@@ -4,7 +4,10 @@ import React from 'react'
 import { View, Text, StyleSheet, Image, TextInput, TouchableHighlight } from 'react-native'
 
 class Login extends React.Component {
-
+  constructor (props) {
+    super(props)
+  }
+  
   render() {
     return (
       <View style={styles.container}>
