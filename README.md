@@ -5,4 +5,3 @@ At the time I completed this course it was almost a year old and there have been
 
  - React Native now depends on React so imports/requires are a bit different than in the course.
  - I've opted to use the ES6 `import` syntax instead of `require`.
- - I've also opted to use the class definition syntax instead of the `React.createClass` method.
