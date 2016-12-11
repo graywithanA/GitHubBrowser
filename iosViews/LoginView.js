@@ -35,16 +35,42 @@ class Login extends React.Component {
         'Authorization': `Basic ${encodedAuth}`
       }
     })
-      .then((response) => {
-        return response.json()
-      })
-      .then((results) => {
-        console.log(results)
-        this.setState({showProgress: false})
-      })
+    .then((response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response
+      }
+
+      throw {
+        incorrectCredentials: response.status == 401,
+        unknownError: response.status !== 401
+      }
+    })
+    .then((response) => {
+      return response.json()
+    })
+    .then((results) => {
+      this.setState({success: true})
+    })
+    .catch((err) => {
+      this.setState(err)
+    })
+    .finally(() => {
+      this.setState({showProgress: false})
+    })
   }
 
   render() {
+    const { success, incorrectCredentials, unknownError, showProgress} = this.state
+    let errorCtrl = <View />
+
+    if (!success && incorrectCredentials) {
+      errorCtrl = <Text style={styles.error}>That username and password didn't work.</Text>
+    }
+
+    if (!success && unknownError) {
+      errorCtrl = <Text style={styles.error}>Something went wrong, please try again.</Text>
+    }
+
     return (
       <View style={styles.container}>
         <Image style={styles.logo} source={require('image!Octocat')} />
@@ -67,8 +93,11 @@ class Login extends React.Component {
           onPress={this.onLoginPressed}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableHighlight>
+
+        {errorCtrl}
+
         <ActivityIndicator
-          animating={this.state.showProgress}
+          animating={showProgress}
           size="large"
           style={styles.loader} />
       </View>
@@ -115,6 +144,10 @@ const styles = StyleSheet.create({
   },
   loader: {
     marginTop: 20
+  },
+  error: {
+    color: 'red',
+    paddingTop: 20
   }
 })
 
