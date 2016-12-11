@@ -7,15 +7,30 @@ class Login extends React.Component {
   constructor (props) {
     super(props)
   }
-  
+
+  onLoginPressed = () => {
+    console.log(`Attempting to login user: ${this.state.username}.`);
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Image style={styles.logo} source={require('image!Octocat')} />
         <Text style={styles.heading}> GitHub Browser</Text>
-        <TextInput style={styles.input} placeholder="GitHub Username"></TextInput>
-        <TextInput style={styles.input} placeholder="GitHub Password" secureTextEntry="true"></TextInput>
-        <TouchableHighlight style={styles.button}>
+        <TextInput
+          style={styles.input}
+          placeholder="GitHub Username"
+          onChangeText={(text) => this.setState({username: text})}>
+        </TextInput>
+        <TextInput
+          style={styles.input}
+          placeholder="GitHub Password"
+          secureTextEntry={true}
+          onChangeText={(text) => this.setState({password: text})}>
+        </TextInput>
+        <TouchableHighlight
+          style={styles.button}
+          onPress={this.onLoginPressed}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableHighlight>
       </View>
