@@ -1,7 +1,7 @@
 'use strict'
 
 import React from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, TextInput } from 'react-native'
 
 class Login extends React.Component {
 
@@ -10,6 +10,8 @@ class Login extends React.Component {
       <View style={styles.container}>
         <Image style={styles.logo} source={require('image!Octocat')} />
         <Text style={styles.heading}> GitHub Browser</Text>
+        <TextInput style={styles.input} placeholder="GitHub Username"></TextInput>
+        <TextInput style={styles.input} placeholder="GitHub Password" secureTextEntry="true"></TextInput>
       </View>
     )
   }
@@ -20,7 +22,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5fcff',
     flex: 1,
     paddingTop: 40,
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 10
 
   },
   logo: {
@@ -30,6 +33,14 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 30,
     marginTop: 10
+  },
+  input: {
+    height: 50,
+    marginTop: 10,
+    padding: 4,
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: '#48bbec'
   }
 })
 
