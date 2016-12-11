@@ -11,7 +11,7 @@ import {
   Text,
   View
 } from 'react-native';
-import Login from './Login'
+import Login from './iosViews/LoginView'
 
 export default class GitHubBrowser extends Component {
   render() {
