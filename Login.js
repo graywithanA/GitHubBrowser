@@ -1,15 +1,30 @@
 'use strict'
 
 import React from 'react'
-import { View, Text, StyleSheet, Image, TextInput, TouchableHighlight } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  TouchableHighlight,
+  ActivityIndicator
+} from 'react-native'
 
 class Login extends React.Component {
   constructor (props) {
     super(props)
   }
 
+  state = {
+    username: '',
+    password: '',
+    showProgress: false
+  }
+
   onLoginPressed = () => {
-    console.log(`Attempting to login user: ${this.state.username}.`);
+    console.log(`Attempting to login user: ${this.state.username}.`)
+    this.setState({showProgress: true})
   }
 
   render() {
@@ -33,6 +48,10 @@ class Login extends React.Component {
           onPress={this.onLoginPressed}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableHighlight>
+        <ActivityIndicator
+          animating={this.state.showProgress}
+          size="large"
+          style={styles.loader} />
       </View>
     )
   }
@@ -74,6 +93,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#fff',
     alignSelf: 'center'
+  },
+  loader: {
+    marginTop: 20
   }
 })
 
