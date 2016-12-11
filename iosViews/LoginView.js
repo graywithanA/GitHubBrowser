@@ -8,8 +8,8 @@ import {
   Image,
   TextInput,
   TouchableHighlight,
-  ActivityIndicator
-} from 'react-native'
+  ActivityIndicator } from 'react-native'
+import { Buffer } from 'buffer'
 
 class Login extends React.Component {
   constructor (props) {
@@ -17,14 +17,31 @@ class Login extends React.Component {
   }
 
   state = {
-    username: '',
-    password: '',
+    username: null,
+    password: null,
     showProgress: false
   }
 
   onLoginPressed = () => {
-    console.log(`Attempting to login user: ${this.state.username}.`)
+    const { username, password } = this.state
+    const auth = new Buffer(`${username}:${password}`)
+    const encodedAuth = auth.toString('base64')
+
     this.setState({showProgress: true})
+    console.log(`Attempting to login user: ${username}`)
+
+    fetch('https://api.github.com/user', {
+      headers: {
+        'Authorization': `Basic ${encodedAuth}`
+      }
+    })
+      .then((response) => {
+        return response.json()
+      })
+      .then((results) => {
+        console.log(results)
+        this.setState({showProgress: false})
+      })
   }
 
   render() {
@@ -35,11 +52,13 @@ class Login extends React.Component {
         <TextInput
           style={styles.input}
           placeholder="GitHub Username"
+          autoCapitalize="none"
           onChangeText={(text) => this.setState({username: text})}>
         </TextInput>
         <TextInput
           style={styles.input}
           placeholder="GitHub Password"
+          autoCapitalize="none"
           secureTextEntry={true}
           onChangeText={(text) => this.setState({password: text})}>
         </TextInput>
