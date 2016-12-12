@@ -59,7 +59,7 @@ class Login extends React.Component {
     return (
       <View style={styles.container}>
         <Image style={styles.logo} source={require('image!Octocat')} />
-        <Text style={styles.heading}> GitHub Browser</Text>
+        <Text style={styles.heading}>GitHub Browser</Text>
         <TextInput
           style={styles.input}
           placeholder="GitHub Username"
@@ -76,7 +76,7 @@ class Login extends React.Component {
         <TouchableHighlight
           style={styles.button}
           onPress={this.onLoginPressed}>
-          <Text style={styles.buttonText}>Login</Text>
+            <Text style={styles.buttonText}>Login</Text>
         </TouchableHighlight>
 
         {errorCtrl}
