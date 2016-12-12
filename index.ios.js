@@ -12,6 +12,7 @@ import {
   View,
   ActivityIndicator
 } from 'react-native';
+import AppContainer from './iosApp/views/AppContainer'
 import Login from './iosApp/views/LoginView'
 import AuthService from './iosApp/services/AuthService'
 
@@ -50,9 +51,7 @@ export default class GitHubBrowser extends Component {
 
     if (this.state.isLoggedIn) {
       return (
-        <View style={styles.container}>
-          <Text style={styles.welcome}>Logged In</Text>
-        </View>
+        <AppContainer />
       )
     } else {
       return (
@@ -79,6 +78,6 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-});
+})
 
 AppRegistry.registerComponent('GitHubBrowser', () => GitHubBrowser);
