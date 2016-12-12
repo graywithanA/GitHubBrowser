@@ -37,6 +37,10 @@ class Login extends React.Component {
         ...results,
         showProgress: false
       })
+
+      if (results.success && this.props.onLogin) {
+        this.props.onLogin()
+      }
     })
   }
 

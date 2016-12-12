@@ -14,10 +14,27 @@ import {
 import Login from './iosViews/LoginView'
 
 export default class GitHubBrowser extends Component {
-  render() {
-    return (
-      <Login />
-    );
+  state = {
+    isLoggedIn: false
+  }
+
+  onLogin = () => {
+    this.setState({isLoggedIn: true})
+  }
+
+  render () {
+    console.log(this.state)
+    if (this.state.isLoggedIn) {
+      return (
+        <View style={styles.container}>
+          <Text style={styles.welcome}>Logged In</Text>
+        </View>
+      )
+    } else {
+      return (
+        <Login onLogin={this.onLogin} />
+      )
+    }
   }
 }
 
