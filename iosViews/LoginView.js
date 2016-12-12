@@ -9,7 +9,7 @@ import {
   TextInput,
   TouchableHighlight,
   ActivityIndicator } from 'react-native'
-import { Buffer } from 'buffer'
+import AuthService from '../iosServices/AuthService'
 
 class Login extends React.Component {
   constructor (props) {
@@ -24,38 +24,19 @@ class Login extends React.Component {
 
   onLoginPressed = () => {
     const { username, password } = this.state
-    const auth = new Buffer(`${username}:${password}`)
-    const encodedAuth = auth.toString('base64')
+    const authService = new AuthService()
 
     this.setState({showProgress: true})
     console.log(`Attempting to login user: ${username}`)
 
-    fetch('https://api.github.com/user', {
-      headers: {
-        'Authorization': `Basic ${encodedAuth}`
-      }
-    })
-    .then((response) => {
-      if (response.status >= 200 && response.status < 300) {
-        return response
-      }
-
-      throw {
-        incorrectCredentials: response.status == 401,
-        unknownError: response.status !== 401
-      }
-    })
-    .then((response) => {
-      return response.json()
-    })
-    .then((results) => {
-      this.setState({success: true})
-    })
-    .catch((err) => {
-      this.setState(err)
-    })
-    .finally(() => {
-      this.setState({showProgress: false})
+    authService.login({
+      username: username,
+      password: password
+    }, (results) => {
+      this.setState({
+        ...results,
+        showProgress: false
+      })
     })
   }
 
