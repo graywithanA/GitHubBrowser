@@ -9,7 +9,7 @@ import {
   TextInput,
   TouchableHighlight,
   ActivityIndicator } from 'react-native'
-import AuthService from '../iosServices/AuthService'
+import AuthService from '../services/AuthService'
 
 class Login extends React.Component {
   constructor (props) {

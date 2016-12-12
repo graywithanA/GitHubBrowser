@@ -9,13 +9,27 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native';
-import Login from './iosViews/LoginView'
+import Login from './iosApp/views/LoginView'
+import AuthService from './iosApp/services/AuthService'
 
 export default class GitHubBrowser extends Component {
   state = {
-    isLoggedIn: false
+    isLoggedIn: false,
+    checkingAuth: true
+  }
+
+  componentDidMount () {
+    const authService = new AuthService
+
+    authService.getAuthInfo((err, authInfo) => {
+      this.setState({
+        checkingAuth: false,
+        isLoggedIn: authInfo !== null
+      })
+    })
   }
 
   onLogin = () => {
@@ -23,7 +37,17 @@ export default class GitHubBrowser extends Component {
   }
 
   render () {
-    console.log(this.state)
+    if (this.state.checkingAuth) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator
+            animating={true}
+          size="large"
+        style={styles.loader} />
+        </View>
+      )
+    }
+
     if (this.state.isLoggedIn) {
       return (
         <View style={styles.container}>
