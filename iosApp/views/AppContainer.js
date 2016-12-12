@@ -5,7 +5,9 @@ import {
   View,
   Text,
   StyleSheet,
-  TabBarIOS } from 'react-native'
+  TabBarIOS
+} from 'react-native'
+import Feed from './FeedView'
 
 class AppContainer extends React.Component {
   state = {
@@ -21,7 +23,7 @@ class AppContainer extends React.Component {
           icon={require('image!inbox')}
           onPress={() => this.setState({selectedTab: 'feed'})}>
             <View style={styles.container}>
-              <Text  style={styles.welcome}>Tab 1</Text>
+              <Feed />
             </View>
           </TabBarIOS.Item>
           <TabBarIOS.Item
