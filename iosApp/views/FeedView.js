@@ -38,7 +38,7 @@ class Feed extends React.Component {
     this.props.navigator.push({
       title: 'Push Event',
       component: PushPayload,
-      passProp: {
+      passProps: {
         pushEvent: rowData
       }
     })
@@ -53,7 +53,7 @@ class Feed extends React.Component {
 
     return (
       <TouchableHighlight
-        onPress={(rowData) => {this.pressRow(rowData)}}
+        onPress={() => {this.pressRow(rowData)}}
         underlayColor='#ddd'>
           <View style={styles.row}>
             <Image
