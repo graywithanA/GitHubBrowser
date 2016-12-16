@@ -5,7 +5,9 @@ import {
   View,
   Text,
   StyleSheet,
-  TabBarIOS } from 'react-native'
+  TabBarIOS
+} from 'react-native'
+import Feed from './FeedView'
 
 class AppContainer extends React.Component {
   state = {
@@ -14,24 +16,20 @@ class AppContainer extends React.Component {
 
   render() {
     return (
-      <TabBarIOS>
+      <TabBarIOS style={styles.container}>
         <TabBarIOS.Item
           title="Feed"
           selected={this.state.selectedTab === 'feed'}
           icon={require('image!inbox')}
           onPress={() => this.setState({selectedTab: 'feed'})}>
-            <View style={styles.container}>
-              <Text  style={styles.welcome}>Tab 1</Text>
-            </View>
+            <Feed />
           </TabBarIOS.Item>
           <TabBarIOS.Item
             title="Search"
             selected={this.state.selectedTab === 'search'}
             icon={require('image!search')}
             onPress={() => this.setState({selectedTab: 'search'})}>
-              <View style={styles.container}>
-                <Text  style={styles.welcome}>Tab 2</Text>
-              </View>
+              <Text  style={styles.welcome}>Tab 2</Text>
           </TabBarIOS.Item>
       </TabBarIOS>
     )
