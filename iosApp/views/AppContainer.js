@@ -5,7 +5,8 @@ import {
   View,
   Text,
   StyleSheet,
-  TabBarIOS
+  TabBarIOS,
+  NavigatorIOS
 } from 'react-native'
 import Feed from './FeedView'
 
@@ -15,6 +16,9 @@ class AppContainer extends React.Component {
   }
 
   render() {
+    // translucent={false} on NavigatorIOS fixes the bug causing ListView content to be hidden behind the Navigator.
+    // see: https://github.com/facebook/react-native/issues/2151
+    // here's an alternative solution: https://github.com/facebook/react-native/issues/898
     return (
       <TabBarIOS style={styles.container}>
         <TabBarIOS.Item
@@ -22,7 +26,13 @@ class AppContainer extends React.Component {
           selected={this.state.selectedTab === 'feed'}
           icon={require('image!inbox')}
           onPress={() => this.setState({selectedTab: 'feed'})}>
-            <Feed />
+            <NavigatorIOS
+              style={styles.nav}
+              translucent={false}
+              initialRoute={{
+                component: Feed,
+                title: 'Feed'
+              }} />
           </TabBarIOS.Item>
           <TabBarIOS.Item
             title="Search"
@@ -46,7 +56,10 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,
+    margin: 10
+  },
+  nav: {
+    flex: 1
   }
 })
 

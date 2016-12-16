@@ -7,10 +7,12 @@ import {
   ListView,
   StyleSheet,
   ActivityIndicator,
-  Image
+  Image,
+  TouchableHighlight
 } from 'react-native'
 import AuthService from '../services/AuthService'
 import moment from 'moment'
+import PushPayload from './PushPayloadView'
 
 class Feed extends React.Component {
   state = {
@@ -32,6 +34,16 @@ class Feed extends React.Component {
     this.fetchFeed()
   }
 
+  pressRow = (rowData) => {
+    this.props.navigator.push({
+      title: 'Push Event',
+      component: PushPayload,
+      passProps: {
+        pushEvent: rowData
+      }
+    })
+  }
+
   renderRow = (rowData) => {
     // let ref = <Text></Text>
     //
@@ -40,18 +52,22 @@ class Feed extends React.Component {
     // }
 
     return (
-      <View style={styles.row}>
-        <Image
-          source={{uri: rowData.actor.avatar_url}}
-          style={styles.avatar} />
-        <View style={styles.labelContainer}>
-          <Text style={styles.label}><Text style={{fontWeight: '600'}}>{rowData.actor.login}</Text> pushed to</Text>
-          {/* {ref} */}
-          <Text style={styles.label}>{rowData.payload.ref.replace('refs/heads/', '')}</Text>
-          <Text style={styles.label}>at <Text style={{fontWeight: '600'}}>{rowData.repo.name}</Text></Text>
-          <Text style={styles.label}>{moment(rowData.created_at).fromNow()}</Text>
-        </View>
-      </View>
+      <TouchableHighlight
+        onPress={() => {this.pressRow(rowData)}}
+        underlayColor='#ddd'>
+          <View style={styles.row}>
+            <Image
+              source={{uri: rowData.actor.avatar_url}}
+              style={styles.avatar} />
+            <View style={styles.labelContainer}>
+              <Text style={styles.label}><Text style={{fontWeight: '600'}}>{rowData.actor.login}</Text> pushed to</Text>
+              {/* {ref} */}
+              <Text style={styles.label}>{rowData.payload.ref.replace('refs/heads/', '')}</Text>
+              <Text style={styles.label}>at <Text style={{fontWeight: '600'}}>{rowData.repo.name}</Text></Text>
+              <Text style={styles.label}>{moment(rowData.created_at).fromNow()}</Text>
+            </View>
+          </View>
+      </TouchableHighlight>
     )
   }
 
@@ -68,7 +84,6 @@ class Feed extends React.Component {
       .then((responseData) => {
         let feedItems = responseData.filter((ev) => ev.type === 'PushEvent')
         // let feedItems = responseData
-        console.log('almost set state');
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(feedItems),
           showProgress: false
@@ -85,7 +100,6 @@ class Feed extends React.Component {
       return (
         <View style={styles.indicatorContainer}>
           <ActivityIndicator
-            style={styles.activityIndicator}
             size="large"
             animating={true} />
         </View>
@@ -105,7 +119,8 @@ class Feed extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    // marginTop: 64
   },
   indicatorContainer: {
     flex: 1,
@@ -117,7 +132,8 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     borderColor: '#d7d7d7',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
+    backgroundColor: '#fff'
   },
   avatar: {
     height: 36,
