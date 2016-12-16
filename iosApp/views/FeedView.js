@@ -5,9 +5,12 @@ import {
   View,
   Text,
   ListView,
-  StyleSheet
+  StyleSheet,
+  ActivityIndicator,
+  Image
 } from 'react-native'
 import AuthService from '../services/AuthService'
+import moment from 'moment'
 
 class Feed extends React.Component {
   state = {
@@ -19,7 +22,10 @@ class Feed extends React.Component {
       rowHasChanged: (r1, r2) => r1 !== r2
     })
 
-    this.setState({dataSource: ds.cloneWithRows(['A', 'B', 'C'])})
+    this.setState({
+      dataSource: ds,
+      showProgress: true
+    })
   }
 
   componentDidMount () {
@@ -27,34 +33,65 @@ class Feed extends React.Component {
   }
 
   renderRow = (rowData) => {
-    return <Text style={styles.row}>
-      {rowData}
-    </Text>
+    // let ref = <Text></Text>
+    //
+    // if (rowData.payload.ref) {
+    //   ref = <Text style={styles.label}>{rowData.payload.ref.replace('refs/heads/', '')}</Text>
+    // }
+
+    return (
+      <View style={styles.row}>
+        <Image
+          source={{uri: rowData.actor.avatar_url}}
+          style={styles.avatar} />
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}><Text style={{fontWeight: '600'}}>{rowData.actor.login}</Text> pushed to</Text>
+          {/* {ref} */}
+          <Text style={styles.label}>{rowData.payload.ref.replace('refs/heads/', '')}</Text>
+          <Text style={styles.label}>at <Text style={{fontWeight: '600'}}>{rowData.repo.name}</Text></Text>
+          <Text style={styles.label}>{moment(rowData.created_at).fromNow()}</Text>
+        </View>
+      </View>
+    )
   }
 
   fetchFeed = () => {
-    var authService = new AuthService()
+    const authService = new AuthService()
 
     authService.getAuthInfo((err, authInfo) => {
-      console.log(err, authInfo);
+      const url = `https://api.github.com/users/${authInfo.user.login}/received_events`
+
+      fetch(url, {
+        headers: authInfo.header
+      })
+      .then((response) => response.json())
+      .then((responseData) => {
+        let feedItems = responseData.filter((ev) => ev.type === 'PushEvent')
+        // let feedItems = responseData
+        console.log('almost set state');
+        this.setState({
+          dataSource: this.state.dataSource.cloneWithRows(feedItems),
+          showProgress: false
+        })
+      })
+      .catch((err) => {
+        console.log('error: ', err);
+      })
     })
-    //
-    // authService.getAuthInfo((err, authInfo) => {
-    //   console.log(authInfo)
-    //   const url = `https://api.github.com/users/${authInfo.user.login}/${received_events}`
-    //
-    //   fetch(url, {
-    //     headers: authInfo.header
-    //   })
-    //   .then((response) => response.json())
-    //   .then((responseData) => {
-    //     let feedItems = responseData.filter((ev) = ev.type === 'PushEvent')
-    //     this.setState({dataSource: this.state.dataSource.cloneWithRows(feedItems)})
-    //   })
-    // })
   }
 
   render() {
+    if (this.state.showProgress) {
+      return (
+        <View style={styles.indicatorContainer}>
+          <ActivityIndicator
+            style={styles.activityIndicator}
+            size="large"
+            animating={true} />
+        </View>
+      )
+    }
+
     return (
       <View style={styles.container}>
         <ListView
@@ -70,8 +107,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start'
   },
+  indicatorContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
   row: {
-    color: '#333'
+    flex: 1,
+    flexDirection: 'row',
+    padding: 20,
+    alignItems: 'center',
+    borderColor: '#d7d7d7',
+    borderBottomWidth: 1
+  },
+  avatar: {
+    height: 36,
+    width: 36,
+    borderRadius: 18
+  },
+  labelContainer: {
+    paddingLeft: 20
+  },
+  label: {
+    backgroundColor: '#fff'
   }
 })
 

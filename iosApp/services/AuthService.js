@@ -17,7 +17,7 @@ class AuthService {
         return cb()
       }
 
-      const zippedObj = _.zipObject(val)
+      const zippedObj = _.zipObject([val[0][0], val[1][0]], [val[0][1], val[1][1]])
 
       if (!zippedObj[AUTH_KEY]) {
         return cb()
@@ -57,6 +57,7 @@ class AuthService {
       return response.json()
     })
     .then((results) => {
+      
       AsyncStorage.multiSet([
         [AUTH_KEY, encodedAuth],
         [USER_KEY, JSON.stringify(results)]
@@ -69,7 +70,7 @@ class AuthService {
       })
     })
     .catch((err) => {
-      cb(err)
+      return cb(err)
     })
   }
 }

@@ -28,7 +28,7 @@ export default class GitHubBrowser extends Component {
     authService.getAuthInfo((err, authInfo) => {
       this.setState({
         checkingAuth: false,
-        isLoggedIn: authInfo !== null
+        isLoggedIn: authInfo !== undefined
       })
     })
   }
@@ -43,8 +43,8 @@ export default class GitHubBrowser extends Component {
         <View style={styles.container}>
           <ActivityIndicator
             animating={true}
-          size="large"
-        style={styles.loader} />
+            size="large"
+            style={styles.loader} />
         </View>
       )
     }
