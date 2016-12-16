@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import AuthService from '../services/AuthService'
 import moment from 'moment'
+import PushPayload from './PushPayloadView'
 
 class Feed extends React.Component {
   state = {
@@ -33,8 +34,14 @@ class Feed extends React.Component {
     this.fetchFeed()
   }
 
-  pressRow = () => {
-    console.log('pressed')
+  pressRow = (rowData) => {
+    this.props.navigator.push({
+      title: 'Push Event',
+      component: PushPayload,
+      passProp: {
+        pushEvent: rowData
+      }
+    })
   }
 
   renderRow = (rowData) => {
@@ -46,7 +53,7 @@ class Feed extends React.Component {
 
     return (
       <TouchableHighlight
-        onPress={() => {this.pressRow(rowData)}}
+        onPress={(rowData) => {this.pressRow(rowData)}}
         underlayColor='#ddd'>
           <View style={styles.row}>
             <Image
@@ -77,7 +84,6 @@ class Feed extends React.Component {
       .then((responseData) => {
         let feedItems = responseData.filter((ev) => ev.type === 'PushEvent')
         // let feedItems = responseData
-        console.log('almost set state');
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(feedItems),
           showProgress: false
@@ -94,7 +100,6 @@ class Feed extends React.Component {
       return (
         <View style={styles.indicatorContainer}>
           <ActivityIndicator
-            style={styles.activityIndicator}
             size="large"
             animating={true} />
         </View>
@@ -114,7 +119,8 @@ class Feed extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    // marginTop: 64
   },
   indicatorContainer: {
     flex: 1,
@@ -126,7 +132,8 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     borderColor: '#d7d7d7',
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
+    backgroundColor: '#fff'
   },
   avatar: {
     height: 36,
