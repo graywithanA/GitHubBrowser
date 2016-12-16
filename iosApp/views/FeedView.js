@@ -7,7 +7,8 @@ import {
   ListView,
   StyleSheet,
   ActivityIndicator,
-  Image
+  Image,
+  TouchableHighlight
 } from 'react-native'
 import AuthService from '../services/AuthService'
 import moment from 'moment'
@@ -32,6 +33,10 @@ class Feed extends React.Component {
     this.fetchFeed()
   }
 
+  pressRow = () => {
+    console.log('pressed')
+  }
+
   renderRow = (rowData) => {
     // let ref = <Text></Text>
     //
@@ -40,18 +45,22 @@ class Feed extends React.Component {
     // }
 
     return (
-      <View style={styles.row}>
-        <Image
-          source={{uri: rowData.actor.avatar_url}}
-          style={styles.avatar} />
-        <View style={styles.labelContainer}>
-          <Text style={styles.label}><Text style={{fontWeight: '600'}}>{rowData.actor.login}</Text> pushed to</Text>
-          {/* {ref} */}
-          <Text style={styles.label}>{rowData.payload.ref.replace('refs/heads/', '')}</Text>
-          <Text style={styles.label}>at <Text style={{fontWeight: '600'}}>{rowData.repo.name}</Text></Text>
-          <Text style={styles.label}>{moment(rowData.created_at).fromNow()}</Text>
-        </View>
-      </View>
+      <TouchableHighlight
+        onPress={() => {this.pressRow(rowData)}}
+        underlayColor='#ddd'>
+          <View style={styles.row}>
+            <Image
+              source={{uri: rowData.actor.avatar_url}}
+              style={styles.avatar} />
+            <View style={styles.labelContainer}>
+              <Text style={styles.label}><Text style={{fontWeight: '600'}}>{rowData.actor.login}</Text> pushed to</Text>
+              {/* {ref} */}
+              <Text style={styles.label}>{rowData.payload.ref.replace('refs/heads/', '')}</Text>
+              <Text style={styles.label}>at <Text style={{fontWeight: '600'}}>{rowData.repo.name}</Text></Text>
+              <Text style={styles.label}>{moment(rowData.created_at).fromNow()}</Text>
+            </View>
+          </View>
+      </TouchableHighlight>
     )
   }
 
