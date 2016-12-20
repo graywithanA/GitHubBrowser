@@ -30,12 +30,6 @@ class SearchResults extends React.Component {
   }
 
   renderRow = (rowData) => {
-    // let ref = <Text></Text>
-    //
-    // if (rowData.payload.ref) {
-    //   ref = <Text style={styles.label}>{rowData.payload.ref.replace('refs/heads/', '')}</Text>
-    // }
-
     return (
       <TouchableHighlight
         underlayColor='#ddd'>
@@ -47,7 +41,22 @@ class SearchResults extends React.Component {
   }
 
   doSearch = () => {
-    console.log(`Doing search for ${this.state.searchQuery}`);
+    var url = `https://api.github.com/search/repositories?q=${encodeURIComponent(this.state.searchQuery)}`
+    console.log(url);
+    fetch(url)
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log(responseData);
+        this.setState({
+          repositories: responseData.repositories,
+          dataSource: this.state.dataSource.cloneWithRows(responseData.items)
+        })
+      })
+      .finally(() => {
+        this.setState({
+          showProgress: false
+        })
+      })
   }
 
   render() {
