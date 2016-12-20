@@ -9,6 +9,7 @@ import {
   NavigatorIOS
 } from 'react-native'
 import Feed from './FeedView'
+import Search from './SearchView'
 
 class AppContainer extends React.Component {
   state = {
@@ -39,7 +40,13 @@ class AppContainer extends React.Component {
             selected={this.state.selectedTab === 'search'}
             icon={require('image!search')}
             onPress={() => this.setState({selectedTab: 'search'})}>
-              <Text  style={styles.welcome}>Tab 2</Text>
+              <NavigatorIOS
+                style={styles.nav}
+                translucent={false}
+                initialRoute={{
+                  component: Search,
+                  title: 'Search'
+                }} />
           </TabBarIOS.Item>
       </TabBarIOS>
     )
