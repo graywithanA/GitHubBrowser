@@ -30,25 +30,34 @@ class SearchResults extends React.Component {
   }
 
   renderRow = (rowData) => {
+    console.log(rowData);
     return (
-      <TouchableHighlight
-        underlayColor='#ddd'>
-          <View style={styles.row}>
-
+      <View style={styles.row}>
+        <Text style={styles.name}>{rowData.full_name}</Text>
+        <View style={styles.repoContainer}>
+          <View style={styles.repoCell}>
+            <Image source={require('image!star')} style={styles.repoCellIcon}></Image>
+            <Text style={styles.repoCellLabel}>{rowData.stargazers_count}</Text>
           </View>
-      </TouchableHighlight>
+          <View style={styles.repoCell}>
+            <Image source={require('image!fork')} style={styles.repoCellIcon}></Image>
+            <Text style={styles.repoCellLabel}>{rowData.forks}</Text>
+          </View>
+          <View style={styles.repoCell}>
+            <Image source={require('image!issues2')} style={styles.repoCellIcon}></Image>
+            <Text style={styles.repoCellLabel}>{rowData.open_issues}</Text>
+          </View>
+        </View>
+      </View>
     )
   }
 
   doSearch = () => {
     var url = `https://api.github.com/search/repositories?q=${encodeURIComponent(this.state.searchQuery)}`
-    console.log(url);
     fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(responseData);
         this.setState({
-          repositories: responseData.repositories,
           dataSource: this.state.dataSource.cloneWithRows(responseData.items)
         })
       })
@@ -91,25 +100,44 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   row: {
-    flex: 1,
-    flexDirection: 'row',
-    padding: 20,
-    alignItems: 'center',
     borderColor: '#d7d7d7',
     borderBottomWidth: 1,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    height: 80
   },
-  avatar: {
-    height: 36,
-    width: 36,
-    borderRadius: 18
+  name: {
+    fontSize: 16,
+    fontWeight: '600'
   },
-  labelContainer: {
-    paddingLeft: 20
+  repoContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginBottom: 30,
   },
-  label: {
-    backgroundColor: '#fff'
+  repoCell: {
+    width: 50,
+    alignItems: 'center'
+  },
+  repoCellIcon: {
+    width: 20,
+    height: 20
+  },
+  repoCellLabel: {
+    textAlign: 'center'
   }
+  // avatar: {
+  //   height: 36,
+  //   width: 36,
+  //   borderRadius: 18
+  // },
+  // labelContainer: {
+  //   paddingLeft: 20
+  // },
+  // label: {
+  //   backgroundColor: '#fff'
+  // }
 })
 
 export default SearchResults
