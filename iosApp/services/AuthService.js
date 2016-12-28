@@ -1,7 +1,8 @@
-import { Buffer } from 'buffer'
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage, NativeModules } from 'react-native'
 import { AUTH_KEY, USER_KEY } from '../constants/user'
 import _ from 'lodash'
+
+const encoding = NativeModules.Encoding
 
 class AuthService {
   getAuthInfo (cb) {
@@ -35,42 +36,42 @@ class AuthService {
   }
 
   login (creds, cb) {
-    const auth = new Buffer(`${creds.username}:${creds.password}`)
-    const encodedAuth = auth.toString('base64')
-
-    fetch('https://api.github.com/user', {
-      headers: {
-        'Authorization': `Basic ${encodedAuth}`
-      }
-    })
-    .then((response) => {
-      if (response.status >= 200 && response.status < 300) {
-        return response
-      }
-
-      throw {
-        incorrectCredentials: response.status == 401,
-        unknownError: response.status !== 401
-      }
-    })
-    .then((response) => {
-      return response.json()
-    })
-    .then((results) => {
-      
-      AsyncStorage.multiSet([
-        [AUTH_KEY, encodedAuth],
-        [USER_KEY, JSON.stringify(results)]
-      ], (err) => {
-        if (err) {
-          throw err
+    const authStr = `${creds.username}:${creds.password}`
+    encoding.base64Encode(authStr, (encodedAuth) => {
+      fetch('https://api.github.com/user', {
+        headers: {
+          'Authorization': `Basic ${encodedAuth}`
+        }
+      })
+      .then((response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return response
         }
 
-        return cb({success: true})
+        throw {
+          incorrectCredentials: response.status == 401,
+          unknownError: response.status !== 401
+        }
       })
-    })
-    .catch((err) => {
-      return cb(err)
+      .then((response) => {
+        return response.json()
+      })
+      .then((results) => {
+
+        AsyncStorage.multiSet([
+          [AUTH_KEY, encodedAuth],
+          [USER_KEY, JSON.stringify(results)]
+        ], (err) => {
+          if (err) {
+            throw err
+          }
+
+          return cb({success: true})
+        })
+      })
+      .catch((err) => {
+        return cb(err)
+      })
     })
   }
 }
